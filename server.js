@@ -1,18 +1,23 @@
 import express from 'express';
-
-const app = express();
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+import { configDotenv } from "dotenv";
+import cookieParser from 'cookie-parser';
+import { connectDB } from "./config/database.js";
 
 import authRoutes from "./routes/auth.routes.js";
 
-app.get('/', (req, res) => {
-    res.json({ message: "Welcome to flavour-verse server!" });
-});
+const app = express();
 
+// Using Configuration functions
+configDotenv();
+connectDB();
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+
+// Routes
 app.use('/api/auth', authRoutes);
 
-app.listen(3000, () => {
+// Starting server
+app.listen(process.env.PORT, () => {
    console.log('Listening on port 3000');
 });
